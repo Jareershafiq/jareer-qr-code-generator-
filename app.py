@@ -8,19 +8,20 @@ import pyttsx3
 from io import BytesIO
 from PIL import Image
 
-# Initialize Text-to-Speech Engine
+# Initialize Text-to-Speech Engine (Only for local execution)
 def speak(text):
-    engine = pyttsx3.init()
-    engine.say(text)
-    engine.runAndWait()
+    if "STREAMLIT_SERVER" not in os.environ:  # Only run locally
+        engine = pyttsx3.init()
+        engine.say(text)
+        engine.runAndWait()
 
 # Streamlit Page Config
 st.set_page_config(page_title="QR Code Generator", page_icon="📷", layout="wide")
 
-# Voice Assistant Greeting
-speak("Welcome to QR Code Generator App made by Jareer Shafiq")
+# Voice Assistant Greeting (MP3 alternative)
+st.audio("welcome.mp3", format="audio/mp3", autoplay=True)
 
-# Custom CSS for a 3D Attractive UI with Animations
+# Custom CSS for a 3D Attractive UI with Enhanced Animations
 st.markdown("""
     <style>
         body { background-color: #1E1E1E; color: white; text-align: center; }
@@ -61,7 +62,7 @@ st.markdown("""
 
 # Title and Description
 st.markdown("""
-    <h1 class='title-text'>📷  QR Code Generator</h1>
+    <h1 class='title-text'>📷 3D QR Code Generator</h1>
     <p style='text-align: center; color: white; font-size: 18px;'>
         Generate stunning QR codes instantly for URLs, texts, or any data in a modern 3D-styled UI!
     </p>
@@ -102,7 +103,7 @@ def generate_qr(data, fg_color, bg_color, logo=False):
         pos = ((img_w - logo_size) // 2, (img_h - logo_size) // 2)
         img.paste(logo_img, pos, logo_img)
     elif logo:
-        st.warning("⚠️ This App is Made BY Jareer Shafiq.")
+        st.warning("⚠️ Logo file not found! Please add 'logo.png' to the project directory.")
     
     return img
 
