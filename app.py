@@ -7,6 +7,7 @@ import uuid
 import pyttsx3
 from io import BytesIO
 from PIL import Image
+import base64
 
 # Initialize Text-to-Speech Engine (Only for local execution)
 def speak(text):
@@ -18,8 +19,22 @@ def speak(text):
 # Streamlit Page Config
 st.set_page_config(page_title="QR Code Generator", page_icon="📷", layout="wide")
 
-# Voice Assistant Greeting (MP3 alternative)
-st.audio("welcome.mp3", format="audio/mp3", autoplay=True)
+# Function to Play Audio using Base64 Encoding
+def play_audio(file_path):
+    """Plays an audio file using base64 encoding to avoid Streamlit media file errors."""
+    with open(file_path, "rb") as audio_file:
+        audio_bytes = audio_file.read()
+        base64_audio = base64.b64encode(audio_bytes).decode()
+        audio_html = f"""
+            <audio autoplay>
+                <source src="data:audio/mp3;base64,{base64_audio}" type="audio/mp3">
+                Your browser does not support the audio element.
+            </audio>
+        """
+        st.markdown(audio_html, unsafe_allow_html=True)
+
+# Play welcome audio when the app opens
+play_audio("welcome.mp3")
 
 # Custom CSS for a 3D Attractive UI with Enhanced Animations
 st.markdown("""
