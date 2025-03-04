@@ -22,16 +22,19 @@ st.set_page_config(page_title="QR Code Generator", page_icon="📷", layout="wid
 # Function to Play Audio using Base64 Encoding
 def play_audio(file_path):
     """Plays an audio file using base64 encoding to avoid Streamlit media file errors."""
-    with open(file_path, "rb") as audio_file:
-        audio_bytes = audio_file.read()
-        base64_audio = base64.b64encode(audio_bytes).decode()
-        audio_html = f"""
-            <audio autoplay>
-                <source src="data:audio/mp3;base64,{base64_audio}" type="audio/mp3">
-                Your browser does not support the audio element.
-            </audio>
-        """
-        st.markdown(audio_html, unsafe_allow_html=True)
+    if os.path.exists(file_path):
+        with open(file_path, "rb") as audio_file:
+            audio_bytes = audio_file.read()
+            base64_audio = base64.b64encode(audio_bytes).decode()
+            audio_html = f"""
+                <audio autoplay>
+                    <source src="data:audio/mp3;base64,{base64_audio}" type="audio/mp3">
+                    Your browser does not support the audio element.
+                </audio>
+            """
+            st.markdown(audio_html, unsafe_allow_html=True)
+    else:
+        st.warning("⚠️ Audio file 'welcome.mp3' not found! Skipping audio playback.")
 
 # Play welcome audio when the app opens
 play_audio("welcome.mp3")
